@@ -2,7 +2,7 @@ import Elysia, { t } from "elysia"
 
 
 export const example = new Elysia()
-    .get("/", () => "Hello Word", {
+    .get("/home", () => "Wowww", {
         detail: {
             tax: ["example"],
             summary: "Get Hello Word",
@@ -26,3 +26,4 @@ export const example = new Elysia()
 
         }
     })
+
