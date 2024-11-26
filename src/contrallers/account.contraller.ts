@@ -15,6 +15,7 @@ export const AccountContraller = new Elysia({
             const token = await jwt.sign({ id: user.id })
             return { user, token }
         } catch (error) {
+
             set.status = "Bad Request"
             if (error instanceof Error)
                 throw new Error(error.message)
