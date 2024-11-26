@@ -12,7 +12,8 @@ export const _register = t.Object({
     password: t.String(),
     display_name: t.String(),
     date_of_birth: t.Optional(t.Date()),
-    looking_for: t.Union([t.Literal('male'), t.Literal('female'), t.Literal('all')])
+    looking_for: t.Union([t.Literal('male'), t.Literal('female'), t.Literal('all')]),
+    gender: t.Optional(t.Union([t.Literal('male'), t.Literal('female'), t.Literal('all')]))
 })
 
 export const _profile = t.Object({
@@ -26,6 +27,7 @@ export const _profile = t.Object({
     created_at: t.Optional(t.Date()),
     update_at: t.Optional(t.Date()),
 
+
     //todo:implement upload feature
     //photo: photo_id[]
 })
@@ -37,17 +39,18 @@ export const _user = t.Object({
     //fllowing: profile[]
 })
 
-export const _userAndToken = t.Object({
+export const userAndToken = t.Object({
     user: _user,
-    user_and_token: t.String()
+    token: t.String()
 })
 
 export const AccountDto = new Elysia().model({
     //request
     register: _register,
     login: _login,
+
     //response
-    user_and_account: _userAndToken
+    user_and_token: userAndToken
 })
 
 export type user = Static<typeof _user>

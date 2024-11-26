@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 import { register, user } from "../types/account.type"
-import { Password } from "bun"
+
 
 type userWithOutID = Omit<user, 'id'>
 

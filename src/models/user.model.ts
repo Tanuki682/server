@@ -14,6 +14,8 @@ const schema = new mongoose.Schema<IUserDocument, IUserModel>({
     interest: { type: String },
     looking_for: { type: String },
     location: { type: String },
+    gender: { type: String },
+
 
     // todo: implement photo feature  
     // photos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Photo' }],  
@@ -42,6 +44,7 @@ schema.methods.toUser = function (): user {
         interest: this.interest,
         looking_for: this.looking_for,
         location: this.location,
+        gender: this.gender
     }
 }
 
