@@ -37,9 +37,9 @@ export const _user = t.Object({
     //fllowing: profile[]
 })
 
-export const _account = t.Object({
+export const _userAndToken = t.Object({
     user: _user,
-    token: t.String()
+    user_and_token: t.String()
 })
 
 export const AccountDto = new Elysia().model({
@@ -47,7 +47,7 @@ export const AccountDto = new Elysia().model({
     register: _register,
     login: _login,
     //response
-    account: _account
+    user_and_account: _userAndToken
 })
 
 export type user = Static<typeof _user>

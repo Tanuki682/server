@@ -27,7 +27,7 @@ const schema = new mongoose.Schema<IUserDocument, IUserModel>({
 schema.methods.toUser = function (): user {
     let ageString = 'N/A'
     if (this.date_of_birth)
-        ageString = `${calculateAge(this.date_of_birth)}$`
+        ageString = `${calculateAge(this.date_of_birth)}`
 
     return {
         id: this._id.toString(),
@@ -61,4 +61,3 @@ schema.statics.createUser = async function (registerData: register): Promise<IUs
 }
 
 export const User = mongoose.model<IUserDocument, IUserModel>("User", schema)
-

@@ -26,7 +26,7 @@ export const AccountContraller = new Elysia({
         body: "register",
         response: "account",
         detail: {
-            summary: 'login'
+            summary: 'Create new User'
         },
         beforeHandle: ({ body: { username, password }, set }) => {
             const usernameRegex = /^[A-Za-z][A-Za-z\d]{3,9}$/
