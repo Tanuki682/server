@@ -1,6 +1,6 @@
 import Elysia from "elysia"
 import { jwtConfig } from "../configs/jwt.config"
-import { _register, AccountDto } from "../types/account.type"
+import { register, AccountDto } from "../types/account.type"
 import { AccountService } from "../services/account.service"
 
 export const AccountContraller = new Elysia({

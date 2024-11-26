@@ -1,5 +1,7 @@
 import { Static, t } from "elysia"
-import { _register } from "./account.type"
+import { _register } from "./register.type"
+
+
 
 export const _profile = t.Object({
     ...t.Omit(_register, ['password']).properties,

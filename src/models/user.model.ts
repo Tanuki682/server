@@ -1,7 +1,6 @@
 import mongoose from "mongoose"
 import { IUserDocument, IUserModel } from "../interfaces/user.interface"
 import { calculateAge } from "../helper/date.helper"
-import { password } from "bun"
 import { register } from "../types/account.type"
 import { user } from "../types/user.type"
 
