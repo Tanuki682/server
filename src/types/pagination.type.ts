@@ -1,8 +1,8 @@
 import { Static, t, TSchema } from "elysia"
 
 export const _Pagination = t.Object({
-    pagesize: t.Number(),
-    currentpage: t.Number(),
+    pageSize: t.Number(),
+    currentPage: t.Number(),
     length: t.Optional(t.Number()),
 
 })
