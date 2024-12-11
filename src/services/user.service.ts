@@ -11,11 +11,10 @@ export const UserService = {
             _id: { $nin: new mongoose.Types.ObjectId(user_id) },
             $and: QueryHelper.parseUserQuery(pagination)
         }
-        const query = User.find(filter).sort({ last_active: -1 }
-        )
-        const skip = pagination.pageSize * (pagination.currentPage)
+        const query = User.find(filter).sort({ last_active: -1 })
+        const skip = pagination.pageSize * (pagination.currentPage - 1)
         query.skip(skip).limit(pagination.pageSize)
-
+            .populate("photos")
 
         const [docs, total] = await Promise.all([
             query.exec(),
@@ -30,7 +29,7 @@ export const UserService = {
     },
 
     getByUserName: async function (username: string): Promise<user> {
-        const user = await User.findOne({ username }).exec
+        const user = await User.findOne({ username }).populate("photos").exec
         if (user)
             return user.toUser()
         throw new Error(`username: "${username}" not dound !!`)
