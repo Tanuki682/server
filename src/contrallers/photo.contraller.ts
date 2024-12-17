@@ -1,17 +1,17 @@
 import Elysia, { error, t } from "elysia"
-import { Imagehelper } from "../helper/image.helper"
 import { PhotoDto } from "../types/photo.type"
-import { AuthMiddlerware } from "../middleware/auth.middleware"
+import { AuthMiddlerware, AuthPayload } from "../middleware/auth.middleware"
 import { PhotoService } from "../services/photo.service"
 
-const _imageDB: { id: string, data: string, type: string }[] = []
-export const photoContraller = new Elysia({
+
+export const PhotoContraller = new Elysia({
     prefix: "api/photo",
     tags: ['Photo']
 })
 
     .use(PhotoDto)
     .use(AuthMiddlerware)
+
     .post('/', async ({ body: { file }, set, Auth }) => {
         const user_id = (Auth.payload as AuthPayload).id
         try {
@@ -25,7 +25,8 @@ export const photoContraller = new Elysia({
     }, {
         detail: { summary: "Upload Photo" },
         body: "upload",
-        response: "photo"
+        response: "photo",
+        isSignIn: true
     }
 
     )

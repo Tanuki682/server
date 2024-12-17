@@ -5,3 +5,5 @@ cloudinary.config({
     api_key_KEY: Bun.env.clounddinary_API_KEY,
     api_secret_Name: Bun.env.clounddinary_API_SECRET,
 })
+
+export const Cloudinary = cloudinary

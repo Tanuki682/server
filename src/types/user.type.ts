@@ -1,6 +1,6 @@
 import Elysia, { Static, t } from "elysia"
 import { _register } from "./register.type"
-import { _Pagination, CreatePagination } from "./pagination.type"
+import { _pagination, CreatePagination } from "./pagination.type"
 import { _photo } from "./photo.type"
 
 export const _profile = t.Object({
@@ -13,12 +13,8 @@ export const _profile = t.Object({
     last_active: t.Optional(t.Date()),
     created_at: t.Optional(t.Date()),
     update_at: t.Optional(t.Date()),
-
-
-    //todo:implement upload feature
     photos: t.Optional(t.Array(_photo))
 })
-
 export const _user = t.Object({
     ..._profile.properties,
     //todo: implement like feature
@@ -27,11 +23,12 @@ export const _user = t.Object({
 })
 
 const _userPagination = t.Object({
-    ..._Pagination.properties,
+    ..._pagination.properties,
     username: t.Optional(t.String()),
     min_age: t.Optional(t.Number()),
     max_age: t.Optional(t.Number()),
     looking_for: t.Optional(t.Union([t.Literal('male'), t.Literal('female'), t.Literal('all')])),
+    gender: t.Optional(t.Union([t.Literal('Male'), t.Literal('Female'), t.Literal('all')]))
 
 })
 
