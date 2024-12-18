@@ -1,8 +1,6 @@
 import mongoose from "mongoose"
-
 import { Photo } from "../models/photo.model"
 import { photo } from "../types/photo.type"
-
 import { User } from './../models/user.model'
 import { Imagehelper } from "../helper/image.helper"
 import { Cloudinary } from "../configs/cloundinary.config"
@@ -46,15 +44,36 @@ export const PhotoService = {
     },
 
     get: async function (user_id: string): Promise<photo[]> {
-        throw new Error('Not implemented')
+        const photoDocs = await Photo.find({ user: user_id })
+        const photo = photoDocs.map(doc => doc.toPhoto())
+        return photo
     },
 
     delete: async function (photo_id: string): Promise<boolean> {
-        throw new Error('Not implemented')
-    },
+        const PhotoDoc = await Photo.findById(photo_id).exec()
+        if (!PhotoDoc)
+            throw new Error(`photo ${photo_id} nor existing`)
 
+        await User.findByIdAndUpdate(PhotoDoc.user, {
+            $pull: { photos: photo_id }
+        })
+        await Photo.findByIdAndDelete(photo_id)
+        await Cloudinary.uploader.destroy(PhotoDoc.public_id)
+
+        return true
+    },
     setAvatar: async function (photo_id: string, user_id: string): Promise<boolean> {
-        throw new Error('Not implemented')
+        await Photo.updateMany(
+            { user: new mongoose.Types.ObjectId(user_id) },
+            { $set: { is_avatar: false } }
+        )
+        const result = await Photo.findByIdAndUpdate(photo_id,
+            { $set: { is_avatar: true } },
+            { new: true }
+
+        )
+
+        return !!result
     },
 
 

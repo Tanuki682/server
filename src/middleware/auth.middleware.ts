@@ -19,6 +19,7 @@ export const AuthMiddlerware = new Elysia({ name: 'Middleware.Auth' })
         const token = auth && auth.startsWith('Bearer ') ? auth.slice(7) : null
         if (token) {
             payload = await jwt.verify(token)
+            // console.log("Decoded Payload:", payload)
             if (!payload) {
                 throw new Error("Token has expired")
             }
@@ -33,7 +34,10 @@ export const AuthMiddlerware = new Elysia({ name: 'Middleware.Auth' })
             if (!value) return
             onBeforeHandle((context) => {
                 const { Auth, error } = context as AuthContext & { error: Function }
-                if (!Auth.payload) return error(401)
+                if (!Auth.payload || !Auth.payload.id)
+                    return error(401)
             })
         }
-    }))
+    })
+
+    )

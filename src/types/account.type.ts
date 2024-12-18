@@ -7,14 +7,10 @@ export const _login = t.Object({
     password: t.String()
 
 })
-
-
-
 export const userAndToken = t.Object({
     user: _user,
     token: t.String()
 })
-
 export const AccountDto = new Elysia().model({
     //request
     register: _register,
@@ -23,7 +19,5 @@ export const AccountDto = new Elysia().model({
     //response
     user_and_token: userAndToken
 })
-
-
 export type register = Static<typeof _register>
 export type login = Static<typeof _login>

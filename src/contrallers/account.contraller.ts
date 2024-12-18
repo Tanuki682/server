@@ -1,9 +1,10 @@
 import Elysia from "elysia"
 import { jwtConfig } from "../configs/jwt.config"
-import { AccountDto } from "../types/account.type"
 import { AccountService } from "../services/account.service"
+import { AccountDto } from "../types/account.type"
 
-export const AccountController = new Elysia({
+
+export const AccountContraller = new Elysia({
     prefix: '/api/account',
     tags: ['Account']
 })
@@ -41,19 +42,20 @@ export const AccountController = new Elysia({
             throw new Error('Something went wrong , try again later')
         }
 
-    }, {
-        body: "register",
-        response: "user_and_token",
-        detail: {
+    }
+        , {
+            body: "register",
+            response: "user_and_token",
+            detail: {
 
-            summary: "Create new user",
-        },
-        beforeHandle: ({ body: { username, password }, set }) => {
-            const usernameRegex = /^[A-Za-z][A-Za-z\d]{3,9}$/
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,16}$/
-            if (!usernameRegex.test(username) || !passwordRegex.test(password)) {
-                set.status = "Bad Request"
-                throw new Error(`Invalid username or password`)
-            }
-        },
-    })
+                summary: "Create new user",
+            },
+            beforeHandle: ({ body: { username, password }, set }) => {
+                const usernameRegex = /^[A-Za-z][A-Za-z\d]{3,9}$/
+                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,16}$/
+                if (!usernameRegex.test(username) || !passwordRegex.test(password)) {
+                    set.status = "Bad Request"
+                    throw new Error(`Invalid username or password`)
+                }
+            },
+        })
