@@ -1,20 +1,19 @@
 import mongoose, { RootFilterQuery } from "mongoose"
 import { updateProfile, user, userPagination as userPagination, userPaginator } from "../types/user.type"
 import { IUserDocument } from "../interfaces/user.interface"
-
 import { User } from "../models/user.model"
 import { QueryHelper } from "../helper/query.helper"
 
 export const UserService = {
-    get: async function (pagintion: userPagination, user_id: string): Promise<userPaginator> {
+    get: async function (pagination: userPagination, user_id: string): Promise<userPaginator> {
         let filter: RootFilterQuery<IUserDocument> = {
             _id: { $nin: new mongoose.Types.ObjectId(user_id) },
-            $and: QueryHelper.parseUserQuery(pagintion)
+            $and: QueryHelper.parseUserQuery(pagination)
         }
         //to be continiue,
         const query = User.find(filter).sort({ last_active: -1 })
-        const skip = pagintion.pageSize * (pagintion.currentPage - 1)
-        query.skip(skip).limit(pagintion.pageSize)
+        const skip = pagination.pageSize * (pagination.currentPage - 1)
+        query.skip(skip).limit(pagination.pageSize)
             .populate("photos")
 
         // const docs = await query.exec()
@@ -25,9 +24,9 @@ export const UserService = {
             User.countDocuments(filter).exec()
         ])
 
-        pagintion.length = total
+        pagination.length = total
         return {
-            pagination: pagintion,
+            pagination: pagination,
             items: docs.map(doc => doc.toUser())
         }
     },

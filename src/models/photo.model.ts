@@ -2,8 +2,9 @@ import mongoose from "mongoose"
 import { IPhotoDocument, IPhotoModel } from "../interfaces/photo.interface"
 import { photo } from "../types/photo.type"
 
+
 const schema = new mongoose.Schema<IPhotoDocument, IPhotoModel>({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     public_id: { type: String, required: true },
     url: { type: String, required: true },
     is_avatar: { type: Boolean, required: true, default: false }

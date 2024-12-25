@@ -4,10 +4,10 @@ import { file } from "bun"
 
 const username = Bun.env.MONGKO_DB_USERNAME || 'your-username'
 const password = Bun.env.MONGKO_DB_PASSWORD || 'your-password'
-const db_name = Bun.env.MONGKO_DB_NAME || 'tinner_class_example'
-const uri = `mongodb+srv://${username}:${password}@cluster0.xxfaz.mongodb.net/?retryWrites=true&w=majority&appName=${db_name} `
+const db_name = Bun.env.MONGKO_DB_NAME || 'tinner_app'
+const uri = `mongodb+srv://${username}:${password}@cluster0.xxfaz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
 
-export const MongoDB = {
+export const mongoDB = {
     connect: async function () {
         try {
             await mongoose.connect(uri)

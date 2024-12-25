@@ -4,7 +4,7 @@ import { photo } from "../types/photo.type"
 type photoWithOutID = Omit<photo, 'id'>
 
 export interface IPhotoDocument extends mongoose.Document, photoWithOutID {
-    user: mongoose.Types.ObjectId,
+    user: mongoose.Types.ObjectId
     create_at?: Date,
     toPhoto: () => photo
 }

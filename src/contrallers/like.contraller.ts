@@ -2,20 +2,21 @@ import Elysia from "elysia"
 import { AuthMiddlerware, AuthPayload } from "../middleware/auth.middleware"
 import { LikeService } from "../services/likes.serviece"
 import { UserDto } from "../types/user.type"
+import { pagination } from "../types/pagination.type"
 
 
 export const LikeController = new Elysia({
     prefix: '/api/photo',
-    tags: ['Photo']
+    tags: ['Like']
 })
     .use(AuthMiddlerware)
     .use(UserDto)
 
-    .put('/', async ({ body: { target_id }, set, Auth }): Promise<void> => {
+    .put('/', async ({ body: { target_id }, set, Auth }) => {
         try {
             const user_id = (Auth.payload as AuthPayload).id
             await LikeService.toggleLike(user_id, target_id)
-            set.status = 400
+            set.status = "No Content"
         } catch (error) {
             set.status = "Bad Request"
             throw error
@@ -25,4 +26,24 @@ export const LikeController = new Elysia({
         detail: { summary: "Toggle Like" },
         isSignIn: true,
         body: "target_id"
+    })
+    .get('/follower', async ({ Auth, query }) => {
+        const user_id = (Auth.payload as AuthPayload).id
+        const user_pagination = await LikeService.getFollower(user_id, query)
+        return user_pagination
+    }, {
+        detail: { summary: "Get Follower" },
+        isSignIn: true,
+        query: "pagination",
+        response: "users"
+    })
+    .get('/following', async ({ Auth, query }) => {
+        const user_id = (Auth.payload as AuthPayload).id
+        const user_pagination = await LikeService.getFollowing(user_id, query)
+        return user_pagination
+    }, {
+        detail: { summary: "Get Following" },
+        isSignIn: true,
+        query: "pagination",
+        response: "users"
     })

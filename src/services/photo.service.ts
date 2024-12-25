@@ -2,13 +2,13 @@ import mongoose from "mongoose"
 import { Photo } from "../models/photo.model"
 import { photo } from "../types/photo.type"
 import { User } from './../models/user.model'
-import { Imagehelper } from "../helper/image.helper"
+import { ImageHelper } from "../helper/image.helper"
 import { Cloudinary } from "../configs/cloundinary.config"
 
 export const PhotoService = {
     upload: async function (file: File, user_id: string): Promise<photo> {
         const buffer = await file.arrayBuffer()
-        const isFileValid = Imagehelper.isImage(buffer)
+        const isFileValid = ImageHelper.isImage(buffer)
         if (!isFileValid)
             throw new Error("Image must be .jpeg or .png")
         const base64 = Buffer.from(buffer).toString('base64')
@@ -43,22 +43,21 @@ export const PhotoService = {
         return uploadPhoto.toPhoto()
     },
 
-    get: async function (user_id: string): Promise<photo[]> {
-        const photoDocs = await Photo.find({ user: user_id })
-        const photo = photoDocs.map(doc => doc.toPhoto())
-        return photo
+    getPhotos: async function (user_id: string): Promise<photo[]> {
+        const photoDocs = await Photo.find({ user: user_id }).exec()
+        return photoDocs.map(doc => doc.toPhoto())
     },
 
     delete: async function (photo_id: string): Promise<boolean> {
-        const PhotoDoc = await Photo.findById(photo_id).exec()
-        if (!PhotoDoc)
+        const Doc = await Photo.findById(photo_id).exec()
+        if (!Doc)
             throw new Error(`photo ${photo_id} nor existing`)
 
-        await User.findByIdAndUpdate(PhotoDoc.user, {
+        await User.findByIdAndUpdate(Doc.user, {
             $pull: { photos: photo_id }
         })
         await Photo.findByIdAndDelete(photo_id)
-        await Cloudinary.uploader.destroy(PhotoDoc.public_id)
+        await Cloudinary.uploader.destroy(Doc.public_id)
 
         return true
     },
@@ -69,7 +68,7 @@ export const PhotoService = {
         )
         const result = await Photo.findByIdAndUpdate(photo_id,
             { $set: { is_avatar: true } },
-            { new: true }
+            // { new: true }
 
         )
 

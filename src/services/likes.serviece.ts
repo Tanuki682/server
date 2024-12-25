@@ -2,7 +2,6 @@ import mongoose from "mongoose"
 import { User } from "../models/user.model"
 import { user, userPagination, userPaginator } from "../types/user.type"
 import { QueryHelper } from "../helper/query.helper"
-import { pathToFileURL } from "bun"
 
 export const LikeService = {
     toggleLike: async function (user_id: string, target_id: string): Promise<boolean> {
@@ -15,12 +14,12 @@ export const LikeService = {
         }).exec()
         if (likeTarget) {
             await User.findByIdAndUpdate(user_id, { $pull: { following: target_id } })
-            await User.findByIdAndUpdate(target_id, { $pull: { following: target_id } })
+            await User.findByIdAndUpdate(target_id, { $pull: { followers: user_id } })
         } else {
             await User.findByIdAndUpdate(user_id, { $addToSet: { following: target_id } })
             await User.findByIdAndUpdate(target_id, {
                 $addToSet
-                    : { following: target_id }
+                    : { followers: user_id }
             })
 
         }
@@ -43,13 +42,13 @@ export const LikeService = {
             ])
         ])
         pagination.length = total[0].count
-        let followers: user[] = []
+        let follower: user[] = []
         if (docs) {
-            const x = docs.follower as user[]
+            follower = docs.toUser()['followers'] as user[]
         }
         return {
             pagination: pagination,
-            items: followers
+            items: follower
         }
     },
     getFollowing: async function (user_id: string, pagination: userPagination): Promise<userPaginator> {
@@ -70,7 +69,7 @@ export const LikeService = {
         pagination.length = total[0].count
         let following: user[] = []
         if (docs) {
-            const x = docs.follower as user[]
+            following = docs.toUser()['following'] as user[]
         }
         return {
             pagination: pagination,

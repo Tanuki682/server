@@ -22,7 +22,7 @@ const schema = new mongoose.Schema<IUserDocument, IUserModel>({
 
     photos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Photo' }],
 
-    follower: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
@@ -60,13 +60,13 @@ schema.methods.toUser = function (): user {
         last_active: this.last_active,
         introduction: this.introduction,
         interest: this.interest,
-        looking_for: this.looking_for,
+        looking_for: this.looking_for ?? "all",
         location: this.location,
         gender: this.gender,
         photos: userPhotos,
 
         following: following,
-        follower: followers,
+        followers: followers,
     }
 }
 schema.methods.verifyPassword = async function (password: string): Promise<boolean> {
@@ -87,6 +87,3 @@ schema.statics.createUser = async function (registerData: register): Promise<IUs
 }
 export const User = mongoose.model<IUserDocument, IUserModel>("User", schema)
 
-function parseLikeUser(following: any[]) {
-    throw new Error("Function not implemented.")
-}

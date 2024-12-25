@@ -2,10 +2,10 @@ import Elysia, { t } from "elysia"
 import { AuthMiddlerware, AuthPayload } from "../middleware/auth.middleware"
 import { UserDto } from "../types/user.type"
 import { UserService } from "../services/user.service"
-import { Query, set } from "mongoose"
+
 
 export const UserContller = new Elysia({
-    prefix: ('/api/user'),
+    prefix: '/api/user',
     tags: ['User']
 })
     .use(UserDto)
@@ -33,7 +33,6 @@ export const UserContller = new Elysia({
             set.status = "No Content"
         } catch (error) {
             set.status = "Bad Request"
-
             if (error instanceof Error)
                 throw new Error(error.message)
         }

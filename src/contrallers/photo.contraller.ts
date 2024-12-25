@@ -2,14 +2,11 @@ import Elysia, { error, t } from "elysia"
 import { PhotoDto } from "../types/photo.type"
 import { AuthMiddlerware, AuthPayload } from "../middleware/auth.middleware"
 import { PhotoService } from "../services/photo.service"
-import { set } from "mongoose"
-
 
 export const PhotoController = new Elysia({
     prefix: '/api/photo',
     tags: ['Photo']
 })
-
     .use(PhotoDto)
     .use(AuthMiddlerware)
 
@@ -18,14 +15,14 @@ export const PhotoController = new Elysia({
             const user_id = (Auth.payload as AuthPayload).id
             await PhotoService.setAvatar(photo_id, user_id)
             set.status = "No Content"
-        } catch {
+        } catch (error) {
             set.status = 'Bad Request'
             if (error instanceof Error)
                 throw error
-            throw new Error("Something went wrong, try again later !!")
+            throw new Error("Set Avatar Failed Please Try Again !!")
         }
     }, {
-        detail: { summary: "Delete photo by photo_id" },
+        detail: { summary: "Set Avatar" },
         isSignIn: true,
         params: "Photo_id"
     })
@@ -37,7 +34,7 @@ export const PhotoController = new Elysia({
             set.status = 'Bad Request'
             if (error instanceof Error)
                 throw error
-            throw new Error("Something went wrong, try again later !!")
+            throw new Error("Delete Photo Failed!!!")
         }
     }, {
         detail: { summary: "Delete photo by photo_id" },
@@ -46,7 +43,7 @@ export const PhotoController = new Elysia({
     })
     .get('/', async ({ Auth }) => {
         const user_id = (Auth.payload as AuthPayload).id
-        return await PhotoService.get("")
+        return await PhotoService.getPhotos(user_id)
     }, {
         detail: { summary: "Get photo[] by user_id" },
         isSignIn: true,
@@ -58,7 +55,7 @@ export const PhotoController = new Elysia({
         try {
             return await PhotoService.upload(file, user_id)
         } catch (error) {
-            set.status = 'Bad Request'
+            set.status = "Bad Request"
             if (error instanceof Error)
                 throw error
             throw new Error("Something went wrong, try again later !!")

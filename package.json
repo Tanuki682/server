@@ -13,7 +13,8 @@
     "cloudinary": "^2.5.1",
     "elysia": "^1.1.26",
     "file-type": "^19.6.0",
-    "mongoose": "^8.9.1"
+    "mongodb": "^6.12.0",
+    "mongoose": "^8.9.2"
   },
   "devDependencies": {
     "bun-types": "latest"

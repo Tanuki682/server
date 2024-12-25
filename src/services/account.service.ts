@@ -8,11 +8,11 @@ export const AccountService = {
             .populate("photos")
 
             .populate({
-                path: "fllowing",
+                path: "following",
                 select: "_id"
             })
             .populate({
-                path: "fllower",
+                path: "follower",
                 select: "_id"
             })
 
