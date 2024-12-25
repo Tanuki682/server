@@ -12,10 +12,10 @@ export const UserContller = new Elysia({
     .use(AuthMiddlerware)
     .get('/all', () => {
         return {
-            text: "Hello Word"
+            user: [
+                { id: '1212', name: 'Tauki' },
+                { id: '1221', name: 'zero' }]
         }
-    }, {
-        isSignIn: true
     })
     .get('/', ({ query, Auth }) => {
         const user_id = (Auth.payload as AuthPayload).id

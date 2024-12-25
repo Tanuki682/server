@@ -32,9 +32,9 @@ const app = new Elysia()
     tls: tlsConfig
   })
 
-let protocol = 'http'
+let protocol = 'https'
 if ('cert' in tlsConfig)
-  protocol = 'http'
+  protocol = 'https'
 console.log(`🦊 Elysia is running at ${protocol}://${app.server?.hostname}:${app.server?.port}`)
 
 
