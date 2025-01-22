@@ -14,12 +14,12 @@ export const LikeService = {
         }).exec()
         if (likeTarget) {
             await User.findByIdAndUpdate(user_id, { $pull: { following: target_id } })
-            await User.findByIdAndUpdate(target_id, { $pull: { followers: user_id } })
+            await User.findByIdAndUpdate(target_id, { $pull: { follower: user_id } })
         } else {
             await User.findByIdAndUpdate(user_id, { $addToSet: { following: target_id } })
             await User.findByIdAndUpdate(target_id, {
                 $addToSet
-                    : { followers: user_id }
+                    : { follower: user_id }
             })
 
         }
@@ -44,7 +44,7 @@ export const LikeService = {
         pagination.length = total[0].count
         let follower: user[] = []
         if (docs) {
-            follower = docs.toUser()['followers'] as user[]
+            follower = docs.toUser()['follower'] as user[]
         }
         return {
             pagination: pagination,

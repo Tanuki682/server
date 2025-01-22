@@ -18,7 +18,7 @@ export const _profile = t.Object({
 export const _user = t.Object({
     ..._profile.properties,
     //todo: implement like feature
-    followers: t.Optional(t.Array(t.Union([t.Partial(_profile), t.String()]))),
+    follower: t.Optional(t.Array(t.Union([t.Partial(_profile), t.String()]))),
     following: t.Optional(t.Array(t.Union([t.Partial(_profile), t.String()]))),
 })
 

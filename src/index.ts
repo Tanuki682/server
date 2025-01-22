@@ -9,12 +9,14 @@ import { UserContller } from "./contrallers/user.contloller"
 import staticPlugin from "@elysiajs/static"
 import { PhotoController } from "./contrallers/photo.contraller"
 import { LikeController } from "./contrallers/like.contraller"
+import { ErrorController } from "./contrallers/errorContraller"
 
 mongoDB.connect()
 
 const app = new Elysia()
   .use(swaggerConfig)
   .use(cors())
+  .use(ErrorController)
   .use(jwtConfig)
   .use(AccountContraller)
   .use(UserContller)

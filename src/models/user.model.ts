@@ -22,7 +22,7 @@ const schema = new mongoose.Schema<IUserDocument, IUserModel>({
 
     photos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Photo' }],
 
-    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    follower: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
@@ -45,7 +45,7 @@ schema.methods.toUser = function (): user {
     const following = Array.isArray(this.following)
         ? parseLikeUser(this.following)
         : undefined
-    const followers = Array.isArray(this.followers)
+    const follower = Array.isArray(this.followers)
         ? parseLikeUser(this.followers)
         : undefined
 
@@ -66,7 +66,7 @@ schema.methods.toUser = function (): user {
         photos: userPhotos,
 
         following: following,
-        followers: followers,
+        follower: follower,
     }
 }
 schema.methods.verifyPassword = async function (password: string): Promise<boolean> {
