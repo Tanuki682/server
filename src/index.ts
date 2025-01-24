@@ -22,7 +22,7 @@ const app = new Elysia()
   .use(UserContller)
   .use(LikeController)
   .use(PhotoController)
-
+  .use(ErrorController)
 
   .use(staticPlugin({
     assets: "public/upload",
