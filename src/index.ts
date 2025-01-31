@@ -30,7 +30,7 @@ const app = new Elysia()
   }))
 
   .listen({
-    port: Bun.env.PORT || 8000,
+    port: Bun.env.PORT || 7010,
     tls: tlsConfig
   })
 
