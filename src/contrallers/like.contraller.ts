@@ -6,7 +6,7 @@ import { pagination } from "../types/pagination.type"
 
 
 export const LikeController = new Elysia({
-    prefix: '/api/photo',
+    prefix: '/api/like',
     tags: ['Like']
 })
     .use(AuthMiddlerware)
