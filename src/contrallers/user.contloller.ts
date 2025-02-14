@@ -17,6 +17,18 @@ export const UserContller = new Elysia({
                 { id: '1221', name: 'zero' }]
         }
     })
+
+    .get('/:username', ({ params: { username } }) => {
+        return UserService.getByuserName(username)
+    }, {
+        detail: { summary: "Get User By Username " },
+        // query: t.Object({
+        //     username: t.String()
+        // }),
+        response: "user",
+        isSignIn: true,
+    })
+
     .get('/', ({ query, Auth }) => {
         const user_id = (Auth.payload as AuthPayload).id
         return UserService.get(query, user_id)
