@@ -1,9 +1,9 @@
-import mongoose from "mongoose"
+import mongoose, { model } from "mongoose"
+import { Cloudinary } from "../configs/Cloudinary.config"
+import { ImageHelper } from "../helper/image.helper"
 import { Photo } from "../models/photo.model"
 import { photo } from "../types/photo.type"
-import { User } from './../models/user.model'
-import { ImageHelper } from "../helper/image.helper"
-import { Cloudinary } from "../configs/cloundinary.config"
+import { User } from "../models/user.madel"
 
 export const PhotoService = {
     upload: async function (file: File, user_id: string): Promise<photo> {
@@ -20,44 +20,42 @@ export const PhotoService = {
                 width: 500,
                 height: 500,
                 crop: 'fill',
-                gravity: 'face',
-
+                gravity: 'face'
             }]
         })
 
-        if (!cloudPhoto.public_id || !cloudPhoto.url)
-            throw new Error("Something went wrong , try again later!!!")
+        if (!cloudPhoto.public_id || !cloudPhoto.secure_url)
+            throw new Error("Something went wrong ,try again later !!")
 
-        const uploadPhoto = new Photo({
+        const uploadphoto = new Photo({
             user: new mongoose.Types.ObjectId(user_id),
             url: cloudPhoto.secure_url,
-            public_id: cloudPhoto.public_id,
-
+            public_id: cloudPhoto.public_id
         })
 
-        await uploadPhoto.save()
+        await uploadphoto.save()
         await User.findByIdAndUpdate(
             user_id,
-            { $push: { photos: uploadPhoto._id } }
+            { $push: { photos: uploadphoto._id } }
         )
-        return uploadPhoto.toPhoto()
+        return uploadphoto.toPhoto()
     },
-
     getPhotos: async function (user_id: string): Promise<photo[]> {
         const photoDocs = await Photo.find({ user: user_id }).exec()
-        return photoDocs.map(doc => doc.toPhoto())
+        const photos = photoDocs.map(doc => doc.toPhoto())
+        return photos
     },
-
     delete: async function (photo_id: string): Promise<boolean> {
-        const Doc = await Photo.findById(photo_id).exec()
-        if (!Doc)
-            throw new Error(`photo ${photo_id} nor existing`)
+        const doc = await Photo.findById(photo_id).exec()
+        if (!doc)
+            throw new Error(`photo ${photo_id} not existing`)
 
-        await User.findByIdAndUpdate(Doc.user, {
+        await User.findByIdAndUpdate(doc.user, {
             $pull: { photos: photo_id }
         })
+
         await Photo.findByIdAndDelete(photo_id)
-        await Cloudinary.uploader.destroy(Doc.public_id)
+        await Cloudinary.uploader.destroy(doc.public_id)
 
         return true
     },
@@ -66,14 +64,12 @@ export const PhotoService = {
             { user: new mongoose.Types.ObjectId(user_id) },
             { $set: { is_avatar: false } }
         )
-        const result = await Photo.findByIdAndUpdate(photo_id,
-            { $set: { is_avatar: true } },
-            // { new: true }
-
-        )
+        const result = await Photo.findByIdAndUpdate
+            (photo_id,
+                { $set: { is_avatar: true } },
+                { new: true }
+            )
 
         return !!result
-    },
-
-
+    }
 }

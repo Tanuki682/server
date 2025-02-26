@@ -1,27 +1,28 @@
 import Elysia, { t } from "elysia"
-import { AuthMiddlerware, AuthPayload } from "../middleware/auth.middleware"
 import { UserDto } from "../types/user.type"
 import { UserService } from "../services/user.service"
+import { AuthMiddleware, AuthPayload } from "../middlewear/auth..middle"
+import { Accountservices } from "../services/account.service"
 
-
-export const UserContller = new Elysia({
-    prefix: '/api/user',
+export const UserController = new Elysia({
+    prefix: "/api/user",
     tags: ['User']
 })
     .use(UserDto)
-    .use(AuthMiddlerware)
+    .use(AuthMiddleware)
     .get('/all', () => {
         return {
             user: [
-                { id: '1212', name: 'Tauki' },
-                { id: '1221', name: 'zero' }]
+                { id: '12', name: 's' },
+                { id: '14', name: 't' }
+            ]
         }
     })
 
     .get('/:username', ({ params: { username } }) => {
-        return UserService.getByuserName(username)
+        return UserService.getByUserName(username)
     }, {
-        detail: { summary: "Get User By Username " },
+        detail: { summary: "Get by username" },
         // query: t.Object({
         //     username: t.String()
         // }),
@@ -36,8 +37,9 @@ export const UserContller = new Elysia({
         detail: { summary: "Get User" },
         query: "pagination",
         response: "users",
-        isSignIn: true
+        isSignIn: true,
     })
+
     .patch('/', async ({ body, set, Auth }) => {
         try {
             const user_id = (Auth.payload as AuthPayload).id
@@ -47,12 +49,12 @@ export const UserContller = new Elysia({
             set.status = "Bad Request"
             if (error instanceof Error)
                 throw new Error(error.message)
+            set.status = 500
+            throw new Error('Somthing went wrong, Try again later')
         }
-        set.status = 500
-        throw new Error("Somwthing went Wrong , try again later")
     }, {
         detail: { summary: "Update Profile" },
         body: "updateProfile",
-        // response: "user",
+        //response: "user",
         isSignIn: true
     })

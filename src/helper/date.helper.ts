@@ -1,5 +1,6 @@
 export function calculateAge(dateOfBirth: Date): number {
     const today = new Date()
+
     const birthDate = new Date(dateOfBirth.getFullYear(), dateOfBirth.getMonth(), dateOfBirth.getDate())
     const currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate())
 

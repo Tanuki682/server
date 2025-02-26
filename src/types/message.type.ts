@@ -6,11 +6,10 @@ const _message = t.Object({
     sender: t.String(),
     recipient: t.String(),
     content: t.String(),
-    create_at: t.Optional(t.Date()),
+    created_at: t.Optional(t.Date()),
     read_at: t.Optional(t.Date()),
     sender_delete: t.Optional(t.Boolean()),
-    recipient_delete: t.Optional(t.Boolean())
-
+    recipient_delete: t.Optional(t.Boolean()),
 })
 
 export const _messagePaginator = CreatePagination(_message, _pagination)

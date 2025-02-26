@@ -1,15 +1,13 @@
 import Elysia from "elysia"
-import { AuthMiddlerware, AuthPayload } from "../middleware/auth.middleware"
-import { LikeService } from "../services/likes.serviece"
+import { AuthMiddleware, AuthPayload } from "../middlewear/auth..middle"
 import { UserDto } from "../types/user.type"
-import { pagination } from "../types/pagination.type"
-
+import { LikeService } from "../services/like.service"
 
 export const LikeController = new Elysia({
-    prefix: '/api/like',
+    prefix: "api/like",
     tags: ['Like']
 })
-    .use(AuthMiddlerware)
+    .use(AuthMiddleware)
     .use(UserDto)
 
     .put('/', async ({ body: { target_id }, set, Auth }) => {
@@ -22,27 +20,28 @@ export const LikeController = new Elysia({
             throw error
         }
     }, {
-
         detail: { summary: "Toggle Like" },
         isSignIn: true,
         body: "target_id"
     })
+
     .get('/follower', async ({ Auth, query }) => {
         const user_id = (Auth.payload as AuthPayload).id
-        const user_pagination = await LikeService.getFollower(user_id, query)
+        const user_pagination = await LikeService.getFollowers(user_id, query)
         return user_pagination
     }, {
-        detail: { summary: "Get Follower" },
+        detail: { summary: "Get followers" },
         isSignIn: true,
         query: "pagination",
         response: "users"
     })
+
     .get('/following', async ({ Auth, query }) => {
         const user_id = (Auth.payload as AuthPayload).id
         const user_pagination = await LikeService.getFollowing(user_id, query)
         return user_pagination
     }, {
-        detail: { summary: "Get Following" },
+        detail: { summary: "Get following" },
         isSignIn: true,
         query: "pagination",
         response: "users"

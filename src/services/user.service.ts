@@ -1,8 +1,8 @@
-import mongoose, { RootFilterQuery } from "mongoose"
-import { updateProfile, user, userPagination as userPagination, userPaginator } from "../types/user.type"
-import { IUserDocument } from "../interfaces/user.interface"
-import { User } from "../models/user.model"
+import mongoose, { Promise, RootFilterQuery } from "mongoose"
+import { updateProfile, user, userPagination, userPaginator } from "../types/user.type"
+import { IUserDocument } from "../Interfaces/user.interface"
 import { QueryHelper } from "../helper/query.helper"
+import { User } from "../models/user.madel"
 
 export const UserService = {
     get: async function (pagination: userPagination, user_id: string): Promise<userPaginator> {
@@ -10,18 +10,14 @@ export const UserService = {
             _id: { $nin: new mongoose.Types.ObjectId(user_id) },
             $and: QueryHelper.parseUserQuery(pagination)
         }
-        //to be continiue,
         const query = User.find(filter).sort({ last_active: -1 })
         const skip = pagination.pageSize * (pagination.currentPage - 1)
         query.skip(skip).limit(pagination.pageSize)
             .populate("photos")
 
-        // const docs = await query.exec()
-        // const total = await User.countDocuments(filter).exec()
-
-        const [docs, total] = await Promise.all([
-            query.exec(),
-            User.countDocuments(filter).exec()
+        const [docs, total] = ([
+            await query.exec(),
+            await User.countDocuments(filter).exec()
         ])
 
         pagination.length = total
@@ -30,19 +26,16 @@ export const UserService = {
             items: docs.map(doc => doc.toUser())
         }
     },
-
-    getByuserName: async function (username: string): Promise<user> {
+    getByUserName: async function (username: string): Promise<user> {
         const user = await User.findOne({ username }).populate("photos").exec()
         if (user)
             return user.toUser()
-        throw new Error(`"Username: "${username}"not found!!!`)
-
-
+        throw new Error(`username:"${username}" not found!!`)
     },
     updateProfile: async function (newProfile: updateProfile, user_id: string): Promise<user> {
         const user = await User.findByIdAndUpdate(user_id, { $set: newProfile }, { new: true, runValidators: true })
         if (user)
             return user.toUser()
-        throw new Error('Something went wrong , try again later')
+        throw new Error('Somthing went wrong, try again later !!')
     }
 }

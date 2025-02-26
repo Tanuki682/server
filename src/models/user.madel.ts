@@ -1,13 +1,12 @@
 import mongoose from "mongoose"
-import { IUserDocument, IUserModel } from "../interfaces/user.interface"
-import { register } from "../types/account.type"
-
-import { user } from "../types/user.type"
-import { Photo } from "./photo.model"
+import { IUserDocument, Iusermodel } from "../Interfaces/user.interface"
 import { calculateAge } from "../helper/date.helper"
+import { user } from "../types/user.type"
+import { _register } from "../types/register.type"
+import { register } from "../types/account.type"
+import { Photo } from "./photo.model"
 
-
-const schema = new mongoose.Schema<IUserDocument, IUserModel>({
+const schema = new mongoose.Schema<IUserDocument, Iusermodel>({
     username: { type: String, required: true, unique: true },
     password_hash: { type: String, required: true },
     display_name: { type: String },
@@ -18,11 +17,8 @@ const schema = new mongoose.Schema<IUserDocument, IUserModel>({
     looking_for: { type: String },
     location: { type: String },
     gender: { type: String },
-
-
     photos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Photo' }],
-
-    follower: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
@@ -32,9 +28,12 @@ schema.methods.toUser = function (): user {
     if (this.date_of_birth)
         ageString = `${calculateAge(this.date_of_birth)}`
 
+
+    // todo: implement like feature
     const userPhotos = Array.isArray(this.photos)
         ? this.photos.map(photo => (new Photo(photo)).toPhoto())
         : undefined
+
     const parseLikeUser = (user: IUserDocument[]) => {
         return user.map(u => {
             if (u.display_name)
@@ -45,7 +44,7 @@ schema.methods.toUser = function (): user {
     const following = Array.isArray(this.following)
         ? parseLikeUser(this.following)
         : undefined
-    const follower = Array.isArray(this.followers)
+    const followers = Array.isArray(this.followers)
         ? parseLikeUser(this.followers)
         : undefined
 
@@ -54,19 +53,18 @@ schema.methods.toUser = function (): user {
         display_name: this.display_name,
         username: this.username,
         created_at: this.created_at,
-        update_at: this.updated_at,
+        updated_at: this.updated_at,
         // date_of_birth: this.date_of_birth,
         age: ageString,
         last_active: this.last_active,
         introduction: this.introduction,
         interest: this.interest,
-        looking_for: this.looking_for ?? "all",
+        looking_for: this.looking_for ?? 'all',
         location: this.location,
         gender: this.gender,
         photos: userPhotos,
-
         following: following,
-        follower: follower,
+        followers: followers,
     }
 }
 schema.methods.verifyPassword = async function (password: string): Promise<boolean> {
@@ -85,5 +83,4 @@ schema.statics.createUser = async function (registerData: register): Promise<IUs
     await newUser.save()
     return newUser
 }
-export const User = mongoose.model<IUserDocument, IUserModel>("User", schema)
-
+export const User = mongoose.model<IUserDocument, Iusermodel>("User", schema)

@@ -1,24 +1,25 @@
 import mongoose from "mongoose"
-import { IUserDocument } from "../interfaces/user.interface"
 import { userPagination } from "../types/user.type"
-import { $ } from "bun"
+import { IUserDocument } from "../Interfaces/user.interface"
 
 export const QueryHelper = {
 
     parseUserQuery: function (query: userPagination): mongoose.FilterQuery<IUserDocument>[] {
         const filter: mongoose.FilterQuery<IUserDocument>[] = []
-        if (query.gender && query.gender !== 'all') {
-            const regEx = new RegExp(`\\b${query.gender.trim()}`, 'i')
-            const _filter = { gender: { $regex: regEx } }
-            filter.push(_filter)
-        }
+
         if (query.username) {
-            const regEx = new RegExp(query.username.trim(), 'i')
+            const regEx = new RegExp(query.username.trim(), 'i') // i = case-insensitive
             const _filter = { username: { $regex: regEx } }
+            filter.push(_filter)
         }
         if (query.looking_for) {
             const regEx = new RegExp(`\\b${query.looking_for.trim()}`, 'i')
             const _filter = { looking_for: { $regex: regEx } }
+            filter.push(_filter)
+        }
+        if (query.gender && query.gender !== 'all') {
+            const regEx = new RegExp(`\\b${query.gender.trim()}`, 'i')
+            const _filter = { gender: { $regex: regEx } }
             filter.push(_filter)
         }
 

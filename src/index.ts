@@ -1,34 +1,34 @@
 import { Elysia, t } from "elysia"
-import { swaggerConfig } from "./configs/swagger.config"
+import { Example } from "./controllers/example.controller"
+import { swaggerConfig } from "./configs/swagger.configs"
 import { tlsConfig } from "./configs/tls.config"
-import { mongoDB } from "./configs/database.config"
-import cors from "@elysiajs/cors"
+import { cors } from '@elysiajs/cors'
+import { MongoDB } from "./configs/database.config"
 import { jwtConfig } from "./configs/jwt.config"
-import { AccountContraller } from "./contrallers/account.contraller"
-import { UserContller } from "./contrallers/user.contloller"
+import { AccountController } from "./controllers/account.controller"
+import { UserController } from "./controllers/user.controller"
 import staticPlugin from "@elysiajs/static"
-import { PhotoController } from "./contrallers/photo.contraller"
-import { LikeController } from "./contrallers/like.contraller"
-import { ErrorController } from "./contrallers/errorContraller"
-
-mongoDB.connect()
-
+import { PhotoController } from "./controllers/photo.controller"
+import { LikeController } from "./controllers/like.controler"
+import { ErrorController } from "./controllers/errorController"
+import { MessageController } from "./controllers/message.controller"
+MongoDB.connect()
 const app = new Elysia()
-  .use(swaggerConfig)
+  .use(ErrorController)
   .use(cors())
-  .use(ErrorController)
+  .use(AccountController)
   .use(jwtConfig)
-  .use(AccountContraller)
-  .use(UserContller)
+  .use(swaggerConfig)
   .use(LikeController)
-  .use(PhotoController)
-  .use(ErrorController)
-
+  .use(MessageController)
+  // .use(Example)
+  .use(UserController)
   .use(staticPlugin({
-    assets: "public/upload",
-    prefix: "/prefix"
+    assets: "public/uploads",
+    prefix: "img"
   }))
-
+  .use(PhotoController)
+  .use(swaggerConfig)
   .listen({
     port: Bun.env.PORT || 7010,
     tls: tlsConfig
@@ -38,6 +38,5 @@ let protocol = 'https'
 if ('cert' in tlsConfig)
   protocol = 'https'
 console.log(`🦊 Elysia is running at ${protocol}://${app.server?.hostname}:${app.server?.port}`)
-
 
 

@@ -9,9 +9,9 @@ export const _pagination = t.Object({
 
 export type pagination = Static<typeof _pagination>
 
-export function CreatePagination<T extends TSchema, U extends TSchema>(itemType: T, paginatorType: U) {
+export function CreatePagination<T extends TSchema, U extends TSchema>(itemType: T, paginationType: U) {
     return t.Object({
         items: t.Array(itemType),
-        pagination: paginatorType
+        pagination: paginationType
     })
 }
